@@ -16,6 +16,7 @@
 
 package co.touchlab.sqliter
 
+import co.touchlab.sqliter.interop.SQLiteException
 import kotlin.test.*
 
 class NativeStatementTest : BaseDatabaseTest(){
@@ -219,22 +220,24 @@ class NativeStatementTest : BaseDatabaseTest(){
     }
 
     val TWO_COL_WITH_BLOB = "CREATE TABLE test (num INTEGER NOT NULL, " +
-            "blb BLOB NOT NULL)"
+            "blb BLOB NOT NULL, blbn BLOB)"
 
     @Test
     fun bindEmptyBlob() {
         basicTestDb(TWO_COL_WITH_BLOB) {
             it.withConnection {
-                it.withStatement("insert into test(num, blb)values(?,?)") {
+                it.withStatement("insert into test(num, blb, blbn)values(?,?,?)") {
                     bindLong(1, 22)
                     bindBlob(2, ByteArray(0){it.toByte()})
+                    bindNull(3)
                     executeInsert()
                 }
 
-                it.withStatement("select blb from test") {
+                it.withStatement("select blb, blbn from test") {
                     val query = query()
                     query.next()
                     assertEquals(query.getBytes(query.columnNames["blb"]!!).size, 0)
+                    assertTrue { assertFails { query.getBytes(query.columnNames["blbn"]!!) } is SQLiteException }
                 }
             }
         }
