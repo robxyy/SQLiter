@@ -34,10 +34,8 @@ kotlin {
             macosX64(),
             iosX64(),
             iosArm64(),
-            iosArm32(),
         watchosArm32(),
         watchosArm64(),
-        watchosX86(),
         watchosX64(),
         tvosArm64(),
         tvosX64(),
@@ -47,7 +45,6 @@ kotlin {
         tvosSimulatorArm64(),
         watchosDeviceArm64(),
         mingwX64(),
-        mingwX86(),
         linuxX64()
     )
 
@@ -83,16 +80,12 @@ kotlin {
         val linuxMain = sourceSets.maybeCreate("linuxX64Main").apply {
             dependsOn(nativeCommonMain)
         }
-        
+
         val mingwMain = sourceSets.maybeCreate("mingwMain").apply {
             dependsOn(nativeCommonMain)
         }
 
         val mingwX64Main = sourceSets.maybeCreate("mingwX64Main").apply {
-            dependsOn(mingwMain)
-        }
-
-        val mingwX86Main = sourceSets.maybeCreate("mingwX86Main").apply {
             dependsOn(mingwMain)
         }
 
